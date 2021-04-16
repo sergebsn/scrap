@@ -28,7 +28,7 @@ req = my_vacancy('data engineer', headers, proxies, 0)
 soup = bs(req.text, "html.parser")
 
 item_list = soup.find(attrs={"class": "vacancy-serp"})
-items = soup.find_all(attrs={"class": "") # почему тут пусто???
+items = soup.find_all(attrs={"class": "vacancy-serp-item"}) # почему тут пусто???
 
 
 print()
