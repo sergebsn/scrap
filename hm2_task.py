@@ -3,6 +3,8 @@ import requests
 from pprint import pprint
 from bs4 import BeautifulSoup as bs
 from fp.fp import FreeProxy
+import pandas as pd
+
 
 
 def my_vacancy(vacancy, header, proxy, area=0):
@@ -24,20 +26,23 @@ proxies = {
     'http': f'{FreeProxy().get()}'
     }
 
-req = my_vacancy('data engineer', headers, proxies, 0)
+
+req = my_vacancy('повар', headers, proxies, 0)
 soup = bs(req.text, "html.parser")
 
 item_list = soup.find(attrs={"class": "vacancy-serp"})
-items = soup.find_all(attrs={"class": "vacancy-serp-item"}) # почему тут пусто???
-
-
-print()
+items = item_list.findChildren(recursive=False)
 
 items_info = []
-for item in item_list.children:
+for item in items:
     info = {}
-    a = item.find("a", attrs={"class": "bloko-link"})
-    if a is not None:
-        info['vacance'] = a.attrs['href']
+    try:
+        a = item.find("a")
+        info['Link'] = a.attrs["href"]
+        info['Name'] = a.get_text()
+        #info['zp0'] = a.find(attrs={"data-qa":"vacancy-serp__vacancy-compensation"}).text
+    except Exception as e:
+        print(e)
 
-print()
+df = pd.DataFrame([info])
+df.to_csv("df.csv")
