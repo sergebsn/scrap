@@ -99,7 +99,10 @@ def add_vacancy_to_db(collection, vacancy_info):
         collection.insert_one(vacancy_info)
 
 # функция для поиска вакансии с ЗП больше введенной суммы
-def search_vacancy_salary(collection, salary):
+def search_min_salary(collection, salary_min):
+    finds = collection.find({"salary_min": {"$gt": salary_min}}, {'salary_max': {"$gt": salary_min}})
+    for item in finds:
+        pprint(item)
 
 
 if __name__ == '__main__':
